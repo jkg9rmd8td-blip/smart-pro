@@ -1,133 +1,57 @@
-import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react"
+import { calculateHumanState } from "../engines/humanEngine"
+import { calculateCarStress } from "../engines/telemetryEngine"
+import { calculateRisk } from "../engines/riskEngine"
+import { getDecision } from "../engines/decisionEngine"
+import DriverCard from "../components/DriverCard"
+import Heatmap from "../components/Heatmap"
+import RiskTimeline from "../components/RiskTimeline"
+import AlertFeed from "../components/AlertFeed"
+import DecisionPanel from "../components/DecisionPanel"
 
-const basePlayers = [
-  { id: 1, name: "محمد أحمد", position: "حارس مرمى", hr: 78, temp: 36.8, o2: 98 },
-  { id: 2, name: "علي سالم", position: "مدافع", hr: 88, temp: 37.2, o2: 96 },
-  { id: 3, name: "فهد محمود", position: "مهاجم", hr: 95, temp: 37.5, o2: 94 },
-];
+export default function Dashboard({ setRisk, goTwin, goExec }) {
+  const [data,setData] = useState({})
+  const [history,setHistory] = useState([])
 
-const calcRisk = (p) =>
-  Math.min(100, Math.round(p.hr * 0.4 + (p.temp - 36) * 20 + (100 - p.o2) * 2));
+  useEffect(()=>{
+    const i=setInterval(()=>{
+      const vitals={
+        hr:150+Math.random()*30,
+        coreTemp:37+Math.random(),
+        hydration:75+Math.random()*10,
+        reactionTime:200+Math.random()*40
+      }
+      const car={
+        FL:Math.random()*100,
+        FR:Math.random()*100,
+        RL:Math.random()*100,
+        RR:Math.random()*100,
+        brakeTemp:400+Math.random()*100
+      }
+      const human=calculateHumanState(vitals)
+      const stress=calculateCarStress(car)
+      const risk=calculateRisk(human,stress)
+      const decision=getDecision(risk)
 
-export default function Dashboard() {
-  const navigate = useNavigate();
-  const [players, setPlayers] = useState(
-    basePlayers.map((p) => ({ ...p, risk: calcRisk(p) }))
-  );
+      setRisk(risk.crashRisk)
+      setData({vitals,human,stress,risk,decision})
+      setHistory(h=>[...h,risk.crashRisk])
+    },2000)
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setPlayers((prev) =>
-        prev.map((p) => {
-          const updated = {
-            ...p,
-            hr: p.hr + (Math.random() * 6 - 3),
-            temp: p.temp + (Math.random() * 0.2 - 0.1),
-            o2: p.o2 + (Math.random() * 2 - 1),
-          };
-          return { ...updated, risk: calcRisk(updated) };
-        })
-      );
-    }, 2000);
-    return () => clearInterval(interval);
-  }, []);
+    return()=>clearInterval(i)
+  },[])
 
-  const avgRisk =
-    players.reduce((sum, p) => sum + p.risk, 0) / players.length;
+  if(!data.vitals) return <div>Loading...</div>
 
-  const riskColor =
-    avgRisk > 75 ? "#ff4d4f" : avgRisk > 50 ? "#ffb020" : "#00e0a4";
-
-  return (
-    <div
-      style={{
-        minHeight: "100vh",
-        background:
-          "radial-gradient(circle at 20% 30%, #0f2027, #203a43, #0b1320)",
-        color: "white",
-        padding: 50,
-      }}
-    >
-      <h1 style={{ fontSize: 42, marginBottom: 40 }}>
-        غرفة العمليات الصحية التنبؤية
-      </h1>
-
-      {/* مؤشر دائري احترافي */}
-      <div
-        style={{
-          width: 200,
-          height: 200,
-          borderRadius: "50%",
-          border: `8px solid ${riskColor}`,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          fontSize: 48,
-          fontWeight: "bold",
-          marginBottom: 50,
-          boxShadow: `0 0 40px ${riskColor}`,
-          transition: "0.4s",
-        }}
-      >
-        {Math.round(avgRisk)}%
-      </div>
-
-      {/* كروت اللاعبين */}
-      <div style={{ display: "grid", gap: 30 }}>
-        {players.map((p) => (
-          <div
-            key={p.id}
-            onClick={() => navigate(`/player/${p.id}`)}
-            style={{
-              cursor: "pointer",
-              padding: 30,
-              borderRadius: 20,
-              background: "rgba(255,255,255,0.05)",
-              backdropFilter: "blur(12px)",
-              boxShadow: `0 0 20px ${
-                p.risk > 75
-                  ? "#ff4d4f"
-                  : p.risk > 50
-                  ? "#ffb020"
-                  : "#00e0a4"
-              }`,
-              transition: "0.3s",
-            }}
-          >
-            <h2>{p.name}</h2>
-            <p style={{ color: "#9ca3af" }}>{p.position}</p>
-
-            <div style={{ marginTop: 10 }}>
-              ❤️ {Math.round(p.hr)} bpm <br />
-              🌡 {p.temp.toFixed(1)}° <br />
-              💨 {Math.round(p.o2)}%
-            </div>
-
-            <div
-              style={{
-                marginTop: 20,
-                height: 10,
-                background: "#1f2937",
-                borderRadius: 10,
-              }}
-            >
-              <div
-                style={{
-                  width: `${p.risk}%`,
-                  height: "100%",
-                  background:
-                    p.risk > 75
-                      ? "#ff4d4f"
-                      : p.risk > 50
-                      ? "#ffb020"
-                      : "#00e0a4",
-                }}
-              />
-            </div>
-          </div>
-        ))}
-      </div>
+  return(
+    <div className="dashboard">
+      <DriverCard data={data}/>
+      <Heatmap tires={data.stress}/>
+      <RiskTimeline history={history}/>
+      <AlertFeed risk={data.risk.crashRisk}/>
+      <DecisionPanel decision={data.decision}/>
+      <button onClick={goTwin}>🧬 Digital Twin</button>
+      <button onClick={goExec}>📊 Executive</button>
     </div>
-  );
+  )
 }
