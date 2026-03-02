@@ -1,21 +1,19 @@
 import { HashRouter, Routes, Route } from "react-router-dom";
-import Layout from "./components/Layout";
-import Dashboard from "./pages/Dashboard";
-import Players from "./pages/Players";
-import Executive from "./pages/Executive";
-import Reports from "./pages/Reports";
+import Layout from "./components/Layout.jsx";
+import Dashboard from "./pages/Dashboard.jsx";
+import Players from "./pages/Players.jsx";
+import Reports from "./pages/Reports.jsx";
 
 export default function App() {
   return (
     <HashRouter>
-      <Layout>
-        <Routes>
+      <Routes>
+        <Route element={<Layout />}>
           <Route path="/" element={<Dashboard />} />
           <Route path="/players" element={<Players />} />
-          <Route path="/executive" element={<Executive />} />
           <Route path="/reports" element={<Reports />} />
-        </Routes>
-      </Layout>
+        </Route>
+      </Routes>
     </HashRouter>
   );
 }
