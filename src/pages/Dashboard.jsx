@@ -5,182 +5,128 @@ import { calcRisk, riskLabel, gameImpact } from "../utils/riskEngine.js";
 export default function Dashboard() {
   const [tick, setTick] = useState(0);
 
-  // محاكاة Live بسيطة (كل 2 ثانية)
   useEffect(() => {
     const t = setInterval(() => setTick((x) => x + 1), 2000);
     return () => clearInterval(t);
   }, []);
 
   const live = useMemo(() => {
-    // نحدث قيم اللاعب #7 بشكل بسيط (عرض)
-    const p7 = { ...players[0] };
-    p7.hr = Math.max(62, Math.min(150, p7.hr + Math.round((Math.random() * 6 - 3))));
-    p7.temp = +(Math.max(36.4, Math.min(38.6, p7.temp + (Math.random() * 0.2 - 0.1))).toFixed(1));
-    p7.spo2 = Math.max(88, Math.min(99, p7.spo2 + Math.round((Math.random() * 2 - 1))));
-    p7.fatigue = Math.max(5, Math.min(95, p7.fatigue + Math.round((Math.random() * 8 - 4))));
-    p7.risk = calcRisk(p7);
+    const p = { ...players[0] };
+    p.hr = Math.max(62, Math.min(155, p.hr + Math.round(Math.random() * 8 - 4)));
+    p.temp = +(Math.max(36.4, Math.min(38.8, p.temp + (Math.random() * 0.25 - 0.12))).toFixed(1));
+    p.spo2 = Math.max(88, Math.min(99, p.spo2 + Math.round(Math.random() * 2 - 1)));
+    p.fatigue = Math.max(5, Math.min(95, p.fatigue + Math.round(Math.random() * 10 - 5)));
 
-    const teamRisk = Math.round((p7.risk + players[1].risk + players[2].risk) / 3);
-    const readiness = Math.max(50, Math.min(99, Math.round((p7.readiness + players[1].readiness + players[2].readiness) / 3 - teamRisk * 0.08)));
-    return { p7, teamRisk, readiness };
+    const r0 = calcRisk(p);
+    const r1 = calcRisk(players[1]);
+    const r2 = calcRisk(players[2]);
+
+    const teamRisk = Math.round((r0 + r1 + r2) / 3);
+    const readiness = Math.max(
+      50,
+      Math.min(99, Math.round((p.readiness + players[1].readiness + players[2].readiness) / 3 - teamRisk * 0.08))
+    );
+
+    return { p, teamRisk, readiness, r0, r1, r2 };
   }, [tick]);
 
   const tag = riskLabel(live.teamRisk);
   const impact = gameImpact(live.teamRisk);
 
-  const ringDeg = Math.max(0, Math.min(360, Math.round((live.teamRisk / 100) * 360)));
-
   return (
     <div className="grid" style={{ gap: 14 }}>
-      {/* HERO */}
       <section className="hero">
-        {/* لو ما عندك صورة hero.jpg بيظهر الخلفية فقط بدون ما يخترب */}
-        <img
-          src="/hero.jpg"
-          alt="AI Sports"
-          onError={(e) => (e.currentTarget.style.display = "none")}
-        />
+        <img src="/hero.jpg" alt="AI Sports" onError={(e) => (e.currentTarget.style.display = "none")} />
         <div className="overlay" />
         <div className="text">
           <h2>طبيب البيانات اللحظي للملعب</h2>
           <p>
-            منصة تجمع العلامات الحيوية، الإجهاد، وتحليل الحركة — وتحوّلها إلى توصيات قرار لحظية
-            للطاقم الفني لتقليل الإصابات ورفع جودة الأداء.
+            منصة تجمع العلامات الحيوية + الإجهاد + تحليل الحركة، وتحوّلها إلى توصيات قرار فورية للطاقم الفني
+            لتقليل الإصابات ورفع جودة الأداء.
           </p>
-          <a className="cta" href="#/players">شاهد حالة اللاعبين</a>
+          <a className="cta" href="#/players">دخول كروت اللاعبين الاحترافية</a>
         </div>
       </section>
 
-      {/* KPI CARDS */}
       <section className="grid cols-4">
         <div className="card">
           <h3>جاهزية الفريق</h3>
           <div className="value">{live.readiness}%</div>
           <div className="bar"><div style={{ width: `${live.readiness}%` }} /></div>
-          <div className="sub">مستوى الاستعداد العام قبل/أثناء المباراة</div>
+          <div className="sub">مستوى الاستعداد العام لحظياً</div>
         </div>
 
         <div className="card">
-          <h3>متوسط النبض</h3>
-          <div className="value">{live.p7.hr} bpm</div>
-          <div className="sub">تحديث حي للاعب #7 (عرض)</div>
+          <h3>مؤشر خطر الفريق</h3>
+          <div className="value">{live.teamRisk}%</div>
+          <div className={`badge ${tag.tone}`} style={{ marginTop: 10, display: "inline-flex" }}>
+            <span className="lamp" style={{ background: tag.tone === "red" ? "var(--danger)" : tag.tone === "ylw" ? "var(--warn)" : "var(--ok)" }} />
+            {tag.label}
+          </div>
+          <div className="sub">تقدير خطر الإصابة للفريق</div>
         </div>
 
         <div className="card">
-          <h3>متوسط الإجهاد</h3>
-          <div className="value">{live.p7.fatigue}%</div>
-          <div className="sub">الإجهاد العضلي والذهني</div>
+          <h3>المراقبة المستمرة</h3>
+          <div className="value">24/7</div>
+          <div className="sub">حساسات + تحليل + تنبيهات</div>
         </div>
 
         <div className="card">
-          <h3>درجة الحرارة</h3>
-          <div className="value">{live.p7.temp}°</div>
-          <div className="sub">مؤشر حيوي مهم للجفاف/الإجهاد الحراري</div>
+          <h3>تحليل لحظي</h3>
+          <div className="value">فوري</div>
+          <div className="sub">بدون تأخير (عرض)</div>
         </div>
       </section>
 
-      {/* RISK + GAME IMPACT */}
       <section className="grid cols-2">
-        <div className="card">
-          <div className="ringWrap">
-            <div>
-              <h3>مؤشر خطر الإصابة اللحظي</h3>
-              <div className="value">{live.teamRisk}%</div>
-              <div className={`badge ${tag.tone}`} style={{ marginTop: 10, display: "inline-block" }}>
-                {tag.label}
-              </div>
-              <div className="sub" style={{ marginTop: 10 }}>
-                التوصية: مراقبة اللاعب رقم <strong>7</strong> خلال الدقائق القادمة
-              </div>
-            </div>
-
-            <div className="ring" style={{ background: `conic-gradient(var(--danger) 0deg, var(--warn) 120deg, var(--ok) 240deg, rgba(255,255,255,.10) 0deg)` }}>
-              <div className="ringVal">{live.teamRisk}%</div>
-              {/* نغطي جزء ليوضح التقدم بصريًا */}
-              <div
-                style={{
-                  position: "absolute",
-                  inset: 0,
-                  borderRadius: 999,
-                  background: `conic-gradient(rgba(255,255,255,.10) ${ringDeg}deg, rgba(255,255,255,0) 0deg)`,
-                  transform: "scale(1.02)"
-                }}
-              />
-            </div>
-          </div>
-
-          <div style={{ marginTop: 14 }} className="riskTag">
-            <span className="lamp" style={{ background: tag.tone === "red" ? "var(--danger)" : tag.tone === "ylw" ? "var(--warn)" : "var(--ok)" }} />
-            قرار فوري: <strong style={{ color: "var(--text)" }}>تخفيف الحمل</strong> أو <strong style={{ color: "var(--text)" }}>تبديل وقائي</strong>
-          </div>
-        </div>
-
         <div className="card">
           <h3>🧠 Game Impact AI</h3>
           <div className="sub" style={{ marginTop: 8 }}>
-            إذا استمر اللاعب لمدة <strong>{impact.extraMin}</strong> دقيقة إضافية:
+            إذا استمر اللاعب لمدة <b>{impact.extraMin}</b> دقيقة إضافية:
           </div>
 
           <div className="grid" style={{ marginTop: 12, gap: 10 }}>
-            <div className="alert">
-              <div className="t">
-                <strong>خطر إصابة عضلية</strong>
-                <span>احتمالية متوقعة بناءً على المؤشرات الحالية</span>
-              </div>
-              <span className="badge red">{impact.injuryProb}%</span>
+            <div className="card" style={{ padding: 12 }}>
+              <h3>احتمالية إصابة</h3>
+              <div className="value">{impact.injuryProb}%</div>
             </div>
+            <div className="card" style={{ padding: 12 }}>
+              <h3>خسارة مباريات</h3>
+              <div className="value">{impact.missedGames}</div>
+            </div>
+            <div className="card" style={{ padding: 12 }}>
+              <h3>التكلفة المحتملة</h3>
+              <div className="value">{impact.costSAR.toLocaleString("ar-SA")} ر.س</div>
+            </div>
+            <div className="card" style={{ padding: 12 }}>
+              <h3>تأثير الفوز</h3>
+              <div className="value">-{impact.winDrop}%</div>
+            </div>
+          </div>
 
-            <div className="alert">
-              <div className="t">
-                <strong>خسارة مباريات متوقعة</strong>
-                <span>تأثير غياب اللاعب على الجدول</span>
-              </div>
-              <span className="badge ylw">{impact.missedGames} مباريات</span>
-            </div>
-
-            <div className="alert">
-              <div className="t">
-                <strong>التكلفة المحتملة</strong>
-                <span>تكلفة علاج/تعافي + أثر غياب</span>
-              </div>
-              <span className="badge red">{impact.costSAR.toLocaleString("ar-SA")} ر.س</span>
-            </div>
-
-            <div className="alert">
-              <div className="t">
-                <strong>تأثير على احتمالية الفوز</strong>
-                <span>تأثير الأداء البدني على النتيجة</span>
-              </div>
-              <span className="badge ylw">-{impact.winDrop}%</span>
-            </div>
+          <div className="sub" style={{ marginTop: 10 }}>
+            <a href="#/injury-prediction" style={{ fontWeight: 900, textDecoration: "none" }}>
+              انتقل للتنبؤ بالإصابة →
+            </a>
           </div>
         </div>
-      </section>
 
-      {/* LIVE ALERTS */}
-      <section className="grid cols-3">
-        <div className="alert">
-          <div className="t">
-            <strong>🔴 ارتفاع مفاجئ في النبض — اللاعب #7</strong>
-            <span>اقتراح: تقليل السبرنت + تبريد وترطيب</span>
+        <div className="card">
+          <h3>إشعار تنفيذي فوري</h3>
+          <div className="sub" style={{ marginTop: 10 }}>
+            توصية: {live.teamRisk >= 70 ? "تبديل وقائي + تبريد وترطيب" : "تخفيف الحمل خلال 5 دقائق"}
           </div>
-          <span className="badge red">حرِج</span>
-        </div>
 
-        <div className="alert">
-          <div className="t">
-            <strong>🟠 إجهاد متوسط — اللاعب #4</strong>
-            <span>اقتراح: تبديل تكتيكي أو إعادة تموضع</span>
+          <div className="bar" style={{ marginTop: 14 }}>
+            <div style={{ width: `${Math.min(100, live.teamRisk)}%` }} />
           </div>
-          <span className="badge ylw">متوسط</span>
-        </div>
 
-        <div className="alert">
-          <div className="t">
-            <strong>🟢 استقرار — اللاعب #10</strong>
-            <span>لا توجد مؤشرات خطر فورية</span>
+          <div className="sub" style={{ marginTop: 12 }}>
+            <a href="#/motion-analysis" style={{ fontWeight: 900, textDecoration: "none" }}>
+              افتح تحليل الحركة 3D →
+            </a>
           </div>
-          <span className="badge grn">مستقر</span>
         </div>
       </section>
     </div>
