@@ -1,15 +1,26 @@
-import { Outlet } from "react-router-dom";
-import Sidebar from "./Sidebar.jsx";
-import Topbar from "./Topbar.jsx";
+import Sidebar from "./Sidebar"
+import Topbar from "./Topbar"
 
-export default function Layout() {
+export default function Layout({ children }) {
   return (
-    <div className="container">
+    <div className="layout">
+
       <Sidebar />
-      <main className="content">
+
+      <div className="main-area">
         <Topbar />
-        <Outlet />
-      </main>
+        <div className="content">
+          {children}
+        </div>
+      </div>
+
+      <div className="right-panel">
+        <h3>📡 Live Feed</h3>
+        <div className="feed-box">Telemetry Stream</div>
+        <div className="feed-box">Pit Strategy</div>
+        <div className="feed-box">Weather Sync</div>
+      </div>
+
     </div>
-  );
+  )
 }
