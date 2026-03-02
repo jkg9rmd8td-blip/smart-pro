@@ -5,3 +5,11 @@
 body {
   font-family: 'Tajawal', sans-serif;
 }
+body {
+  background: linear-gradient(135deg, #0f172a, #0b1120);
+  font-family: 'Cairo', sans-serif;
+}
+
+.glow {
+  box-shadow: 0 0 25px rgba(16,185,129,0.4);
+}
