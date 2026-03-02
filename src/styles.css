@@ -119,3 +119,29 @@ body {
   width: 72%;
   transition: 0.5s;
 }
+/* Alerts */
+.alerts-section {
+  margin-top: 50px;
+}
+
+.alert {
+  padding: 18px;
+  margin-top: 15px;
+  border-radius: 15px;
+  font-weight: 500;
+}
+
+.alert.high {
+  background: rgba(239,68,68,0.15);
+  border: 1px solid rgba(239,68,68,0.4);
+}
+
+.alert.medium {
+  background: rgba(251,191,36,0.15);
+  border: 1px solid rgba(251,191,36,0.4);
+}
+
+.alert.low {
+  background: rgba(34,197,94,0.15);
+  border: 1px solid rgba(34,197,94,0.4);
+}
