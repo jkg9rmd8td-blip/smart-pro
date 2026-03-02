@@ -1,16 +1,16 @@
 import { HashRouter, Routes, Route, NavLink } from "react-router-dom";
 import Dashboard from "./pages/Dashboard";
-import Motion3D from "./pages/Motion3D";
+import PlayerDetails from "./pages/PlayerDetails";
 
 function Layout({ children }) {
   return (
-    <div style={{ display: "flex", minHeight: "100vh" }}>
+    <div style={{ display: "flex", minHeight: "100vh", background: "#0b1320", color: "white" }}>
       
       {/* Sidebar */}
       <div
         style={{
-          width: "220px",
-          background: "#0f1c2f",
+          width: "230px",
+          background: "#111c2f",
           padding: "30px 20px",
           borderLeft: "1px solid rgba(255,255,255,0.05)"
         }}
@@ -19,7 +19,6 @@ function Layout({ children }) {
 
         <nav style={{ marginTop: 30, display: "flex", flexDirection: "column", gap: 15 }}>
           <NavLink to="/" style={navStyle}>الرئيسية</NavLink>
-          <NavLink to="/motion" style={navStyle}>تحليل الحركة 3D</NavLink>
         </nav>
       </div>
 
@@ -43,7 +42,7 @@ export default function App() {
       <Layout>
         <Routes>
           <Route path="/" element={<Dashboard />} />
-          <Route path="/motion" element={<Motion3D />} />
+          <Route path="/player/:id" element={<PlayerDetails />} />
         </Routes>
       </Layout>
     </HashRouter>
