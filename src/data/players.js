@@ -8,6 +8,11 @@ export const players = [
     spo2: 98,
     fatigue: 15,
     readiness: 94,
+    hrv: 85,
+    cortisol: "منخفض",
+    sleep: "ممتاز",
+    gait: 92,
+    asymmetry: 6,
     risk: 18
   },
   {
@@ -19,6 +24,11 @@ export const players = [
     spo2: 96,
     fatigue: 35,
     readiness: 86,
+    hrv: 62,
+    cortisol: "متوسط",
+    sleep: "جيد",
+    gait: 81,
+    asymmetry: 14,
     risk: 46
   },
   {
@@ -30,6 +40,11 @@ export const players = [
     spo2: 91,
     fatigue: 70,
     readiness: 62,
+    hrv: 41,
+    cortisol: "مرتفع",
+    sleep: "ضعيف",
+    gait: 66,
+    asymmetry: 22,
     risk: 82
   }
 ];
