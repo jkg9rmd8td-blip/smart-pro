@@ -5,12 +5,12 @@ export default function Layout({ children }) {
   const [dark, setDark] = useState(true);
 
   return (
-    <div className={dark ? "dark bg-[#0c131d]" : "bg-white"}>
-      <div className="flex min-h-screen text-white dark:text-white">
+    <div className={dark ? "dark bg-[#0c131d] text-white min-h-screen" : "bg-white text-black min-h-screen"}>
+      <div className="flex">
 
         <Sidebar />
 
-        <div className="flex-1 p-8">
+        <main className="flex-1 p-8">
           <button
             onClick={() => setDark(!dark)}
             className="mb-6 px-4 py-2 bg-primary text-black rounded-xl"
@@ -18,8 +18,9 @@ export default function Layout({ children }) {
             تبديل الوضع
           </button>
 
-          {children}
-        </div>
+          {children}  {/* هذا أهم سطر */}
+        </main>
+
       </div>
     </div>
   );
