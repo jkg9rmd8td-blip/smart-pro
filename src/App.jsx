@@ -1,28 +1,51 @@
-import { HashRouter, Routes, Route } from "react-router-dom";
-import Layout from "./components/Layout.jsx";
+import { HashRouter, Routes, Route, NavLink } from "react-router-dom";
+import Dashboard from "./pages/Dashboard";
+import Motion3D from "./pages/Motion3D";
 
-import Dashboard from "./pages/Dashboard.jsx";
-import Players from "./pages/Players.jsx";
-import MotionAnalysis from "./pages/MotionAnalysis.jsx";
-import InjuryPrediction from "./pages/InjuryPrediction.jsx";
-import StressMonitoring from "./pages/StressMonitoring.jsx";
-import Alerts from "./pages/Alerts.jsx";
-import Reports from "./pages/Reports.jsx";
+function Layout({ children }) {
+  return (
+    <div style={{ display: "flex", minHeight: "100vh" }}>
+      
+      {/* Sidebar */}
+      <div
+        style={{
+          width: "220px",
+          background: "#0f1c2f",
+          padding: "30px 20px",
+          borderLeft: "1px solid rgba(255,255,255,0.05)"
+        }}
+      >
+        <h2 style={{ color: "#00e0a4" }}>Smart AI</h2>
+
+        <nav style={{ marginTop: 30, display: "flex", flexDirection: "column", gap: 15 }}>
+          <NavLink to="/" style={navStyle}>الرئيسية</NavLink>
+          <NavLink to="/motion" style={navStyle}>تحليل الحركة 3D</NavLink>
+        </nav>
+      </div>
+
+      {/* Content */}
+      <div style={{ flex: 1, padding: "40px" }}>
+        {children}
+      </div>
+    </div>
+  );
+}
+
+const navStyle = ({ isActive }) => ({
+  color: isActive ? "#00e0a4" : "#9ca3af",
+  textDecoration: "none",
+  fontSize: "16px"
+});
 
 export default function App() {
   return (
     <HashRouter>
-      <Routes>
-        <Route element={<Layout />}>
+      <Layout>
+        <Routes>
           <Route path="/" element={<Dashboard />} />
-          <Route path="/players" element={<Players />} />
-          <Route path="/motion-analysis" element={<MotionAnalysis />} />
-          <Route path="/injury-prediction" element={<InjuryPrediction />} />
-          <Route path="/stress-monitoring" element={<StressMonitoring />} />
-          <Route path="/alerts" element={<Alerts />} />
-          <Route path="/reports" element={<Reports />} />
-        </Route>
-      </Routes>
+          <Route path="/motion" element={<Motion3D />} />
+        </Routes>
+      </Layout>
     </HashRouter>
   );
 }
