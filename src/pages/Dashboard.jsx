@@ -1,8 +1,3 @@
 export default function Dashboard() {
-  return (
-    <div>
-      <h1>مركز القيادة الصحية التنبؤية</h1>
-      <p>تحليل لحظي لحالة الفريق واتخاذ القرار الوقائي</p>
-    </div>
-  );
+  return <h1 style={{fontSize: "60px"}}>CONNECTED 999</h1>;
 }
