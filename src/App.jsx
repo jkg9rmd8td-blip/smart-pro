@@ -1,14 +1,28 @@
-import { HashRouter, Routes, Route } from "react-router-dom";
-import Dashboard from "./pages/Dashboard";
-import PlayerDetails from "./pages/PlayerDetails";
+import { useState } from "react"
+import Landing from "./pages/Landing"
+import Dashboard from "./pages/Dashboard"
+import DigitalTwin from "./pages/DigitalTwin"
+import Executive from "./pages/Executive"
 
 export default function App() {
-  return (
-    <HashRouter>
-      <Routes>
-        <Route path="/" element={<Dashboard />} />
-        <Route path="/player/:id" element={<PlayerDetails />} />
-      </Routes>
-    </HashRouter>
-  );
+  const [page, setPage] = useState("landing")
+  const [risk, setRisk] = useState(0)
+
+  if (page === "landing")
+    return <Landing enter={() => setPage("dashboard")} />
+
+  if (page === "dashboard")
+    return (
+      <Dashboard
+        setRisk={setRisk}
+        goTwin={() => setPage("twin")}
+        goExec={() => setPage("exec")}
+      />
+    )
+
+  if (page === "twin")
+    return <DigitalTwin risk={risk} back={() => setPage("dashboard")} />
+
+  if (page === "exec")
+    return <Executive risk={risk} back={() => setPage("dashboard")} />
 }
