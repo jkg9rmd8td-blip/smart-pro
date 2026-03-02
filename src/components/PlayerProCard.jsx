@@ -1,71 +1,44 @@
-import StatChip from "./StatChip.jsx";
-import { calcRisk, riskLabel } from "../utils/riskEngine.js";
+import { motion } from "framer-motion";
 
-function initials(name) {
-  return name
-    .split(" ")
-    .slice(0, 2)
-    .map((s) => s[0])
-    .join("");
-}
-
-export default function PlayerProCard({ p, onSelect, selected }) {
-  const risk = calcRisk(p);
-  const tag = riskLabel(risk);
-
-  const lampColor =
-    tag.tone === "red" ? "var(--danger)" : tag.tone === "ylw" ? "var(--warn)" : "var(--ok)";
-
+export default function PlayerProCard({ player }) {
   return (
-    <div
-      className={`card playerPro`}
-      style={{
-        borderColor: selected ? "rgba(0,245,168,.28)" : undefined,
-        boxShadow: selected
-          ? "0 18px 55px rgba(0,0,0,.45), 0 0 45px rgba(0,245,168,.14)"
-          : undefined,
-        cursor: "pointer"
-      }}
-      onClick={() => onSelect?.(p)}
-      role="button"
-      tabIndex={0}
+    <motion.div
+      className="glass-card"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4 }}
     >
-      <div className="proTop">
-        <div className="proLeft">
-          <div className="avatarPro">{initials(p.name)}</div>
-          <div className="proName">
-            <strong>
-              {p.name} <span style={{ color: "rgba(242,244,247,.55)" }}>#{p.id}</span>
-            </strong>
-            <span>{p.role}</span>
-          </div>
-        </div>
-        <div className="spark" title="مؤشر حي (عرض)"></div>
+      <h3>{player.name}</h3>
+      <p style={{ color: "#9ca3af" }}>{player.position}</p>
+
+      <div style={{ marginTop: 12 }}>
+        <div>❤️ نبض: {player.heartRate} bpm</div>
+        <div>🌡 حرارة: {player.temp}°</div>
+        <div>💨 أكسجين: {player.oxygen}%</div>
       </div>
 
-      <div className="riskRow">
-        <div className={`badge ${tag.tone}`}>
-          <span className="lamp" style={{ background: lampColor, boxShadow: `0 0 14px ${lampColor}55` }} />
-          {tag.label}
-        </div>
-        <div className="riskPct">خطر {risk}%</div>
+      <div style={{
+        marginTop: 14,
+        height: 8,
+        background: "#1f2937",
+        borderRadius: 10,
+        overflow: "hidden"
+      }}>
+        <div
+          style={{
+            width: `${player.risk}%`,
+            background:
+              player.risk > 70
+                ? "var(--danger)"
+                : player.risk > 40
+                ? "var(--warning)"
+                : "var(--primary)",
+            height: "100%",
+            transition: "0.5s"
+          }}
+        />
       </div>
-
-      <div className="bar">
-        <div style={{ width: `${Math.max(1, 100 - risk)}%` }} />
-      </div>
-
-      <div className="chips">
-        <StatChip label="نبض" value={`${p.hr} bpm`} />
-        <StatChip label="SpO2" value={`${p.spo2}%`} />
-        <StatChip label="حرارة" value={`${p.temp}°`} />
-        <StatChip label="إجهاد" value={`${p.fatigue}%`} />
-        <StatChip label="جاهزية" value={`${p.readiness}%`} />
-      </div>
-
-      <div className="sub" style={{ marginTop: 10 }}>
-        توصية: {risk >= 70 ? "تبديل وقائي فوري" : risk >= 35 ? "تخفيف الحمل خلال 5–10 دقائق" : "استمرار مع مراقبة"}
-      </div>
-    </div>
+      <p style={{ marginTop: 6 }}>مؤشر الخطر: {player.risk}%</p>
+    </motion.div>
   );
 }
