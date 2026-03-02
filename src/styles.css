@@ -1,42 +1,45 @@
-:root {
-  --bg-dark: #0b1320;
-  --bg-card: rgba(20, 30, 50, 0.6);
-  --border-glass: rgba(255, 255, 255, 0.08);
-  --primary: #00e0a4;
-  --danger: #ff4d4f;
-  --warning: #ffb020;
-  --text-main: #ffffff;
-  --text-sub: #9ca3af;
-}
-
 body {
   margin: 0;
-  font-family: "Cairo", sans-serif;
-  background: linear-gradient(135deg, #0b1320, #0f1c2f);
-  color: var(--text-main);
+  font-family: Arial;
+  background: radial-gradient(circle at center, #0f172a, #020617);
+  color: white;
+  direction: rtl;
 }
 
-.glass-card {
-  background: var(--bg-card);
-  backdrop-filter: blur(14px);
-  border: 1px solid var(--border-glass);
-  border-radius: 18px;
+.landing {
+  text-align: center;
+  padding: 120px 20px;
+}
+
+.dashboard {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  padding: 40px;
+}
+
+.card, .decision, .timeline, .page {
+  background: rgba(30,41,59,0.95);
   padding: 20px;
-  transition: all 0.3s ease;
+  border-radius: 14px;
+  box-shadow: 0 0 30px rgba(0,255,255,0.15);
+  transition: 0.3s;
 }
 
-.glass-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 0 25px rgba(0, 224, 164, 0.2);
+.card:hover {
+  box-shadow: 0 0 40px rgba(0,255,255,0.4);
 }
 
-.big-number {
-  font-size: 36px;
-  font-weight: bold;
-  color: var(--primary);
+button {
+  padding: 10px 20px;
+  background: #2563eb;
+  border: none;
+  border-radius: 8px;
+  color: white;
+  cursor: pointer;
+  margin: 5px 0;
 }
 
-.section-title {
-  font-size: 22px;
-  margin-bottom: 16px;
-}
+.alert.red { background: #7f1d1d; padding: 15px; border-radius: 8px; }
+.alert.yellow { background: #78350f; padding: 15px; border-radius: 8px; }
+.alert.green { background: #14532d; padding: 15px; border-radius: 8px; }
