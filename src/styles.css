@@ -6,35 +6,29 @@ body {
   direction: rtl;
 }
 
+/* Layout الأساسي */
 .dashboard {
   display: grid;
   grid-template-columns: 300px 1fr 320px;
   gap: 20px;
   padding: 20px;
-  height: 100vh;
+  min-height: 100vh;
   box-sizing: border-box;
 }
 
-.panel {
+/* Panels */
+.panel,
+.center-panel {
   background: linear-gradient(145deg, #0b1220, #0f172a);
   border-radius: 16px;
   padding: 20px;
   box-shadow: 0 0 30px rgba(0,255,255,0.08);
-  overflow: auto;
+  transition: 0.3s;
 }
 
-.center-panel {
-  background: radial-gradient(circle at center, #0f172a, #0b1220);
-  border-radius: 16px;
-  padding: 30px;
-  box-shadow: 0 0 50px rgba(0,255,255,0.12);
-}
-
-.metric {
-  margin-bottom: 15px;
-  padding: 10px;
-  background: rgba(255,255,255,0.05);
-  border-radius: 8px;
+.panel:hover,
+.center-panel:hover {
+  box-shadow: 0 0 40px rgba(0,255,255,0.25);
 }
 
 .hud-title {
@@ -43,6 +37,57 @@ body {
   color: #38bdf8;
 }
 
-.glow {
-  box-shadow: 0 0 20px rgba(0,255,255,0.5);
+.metric {
+  margin-bottom: 12px;
+  padding: 10px;
+  background: rgba(255,255,255,0.05);
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+/* Buttons */
+button {
+  padding: 10px 20px;
+  background: #2563eb;
+  border: none;
+  border-radius: 8px;
+  color: white;
+  cursor: pointer;
+  margin-top: 10px;
+  width: 100%;
+}
+
+button:hover {
+  background: #1d4ed8;
+}
+
+/* 📱 Tablet */
+@media (max-width: 1100px) {
+  .dashboard {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .center-panel {
+    grid-column: span 2;
+  }
+}
+
+/* 📱 Mobile */
+@media (max-width: 768px) {
+  .dashboard {
+    grid-template-columns: 1fr;
+  }
+
+  .panel,
+  .center-panel {
+    padding: 15px;
+  }
+
+  .hud-title {
+    font-size: 16px;
+  }
+
+  .metric {
+    font-size: 13px;
+  }
 }
