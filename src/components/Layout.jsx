@@ -1,10 +1,15 @@
-import Sidebar from "./Sidebar";
+import { Outlet } from "react-router-dom";
+import Sidebar from "./Sidebar.jsx";
+import Topbar from "./Topbar.jsx";
 
-export default function Layout({ children }) {
+export default function Layout() {
   return (
-    <div className="app">
+    <div className="container">
       <Sidebar />
-      <main className="content">{children}</main>
+      <main className="content">
+        <Topbar />
+        <Outlet />
+      </main>
     </div>
   );
 }
