@@ -1,8 +1,11 @@
-export default function Executive() {
+import ExecutivePanel from "../components/ExecutivePanel"
+
+export default function Executive({ risk, back }) {
   return (
-    <div>
-      <h1>اللوحة التنفيذية</h1>
-      <p>تحليل مالي وتأثير الإصابات</p>
+    <div className="page">
+      <h2>📊 Executive Mode</h2>
+      <ExecutivePanel risk={risk}/>
+      <button onClick={back}>⬅ رجوع</button>
     </div>
-  );
+  )
 }
