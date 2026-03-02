@@ -1,32 +1,35 @@
 export const players = [
   {
-    id: 1,
+    id: 7,
     name: "محمد أحمد",
-    position: "حارس مرمى",
+    role: "حارس مرمى",
+    hr: 72,
     temp: 36.8,
-    heart: 72,
+    spo2: 98,
     fatigue: 15,
-    oxygen: 98,
-    risk: 12
+    readiness: 94,
+    risk: 18
   },
   {
-    id: 2,
+    id: 4,
     name: "علي سالم",
-    position: "مدافع",
+    role: "مدافع",
+    hr: 85,
     temp: 37.2,
-    heart: 85,
+    spo2: 96,
     fatigue: 35,
-    oxygen: 96,
-    risk: 45
+    readiness: 86,
+    risk: 46
   },
   {
-    id: 3,
+    id: 10,
     name: "فهد محمود",
-    position: "مهاجم",
+    role: "مهاجم",
+    hr: 112,
     temp: 38.1,
-    heart: 110,
+    spo2: 91,
     fatigue: 70,
-    oxygen: 91,
+    readiness: 62,
     risk: 82
   }
 ];
