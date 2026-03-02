@@ -1,21 +1,23 @@
 import { useMemo, useState } from "react";
 import { players } from "../data/players.js";
-import { calcRisk, riskLabel } from "../utils/riskEngine.js";
+import PlayerProCard from "../components/PlayerProCard.jsx";
 
 export default function Players() {
   const [q, setQ] = useState("");
+  const [selectedId, setSelectedId] = useState(players[0].id);
 
   const list = useMemo(() => {
     const norm = q.trim();
-    const base = players.map((p) => ({ ...p, risk: calcRisk(p) }));
-    if (!norm) return base;
-    return base.filter((p) => p.name.includes(norm) || String(p.id).includes(norm));
+    if (!norm) return players;
+    return players.filter((p) => p.name.includes(norm) || String(p.id).includes(norm));
   }, [q]);
+
+  const selected = useMemo(() => players.find((p) => p.id === selectedId) || players[0], [selectedId]);
 
   return (
     <div className="grid" style={{ gap: 14 }}>
       <div className="card">
-        <h3>بحث سريع</h3>
+        <h3>بحث + اختيار لاعب</h3>
         <div style={{ marginTop: 10, display: "flex", gap: 10, flexWrap: "wrap" }}>
           <input
             value={q}
@@ -32,57 +34,26 @@ export default function Players() {
               outline: "none"
             }}
           />
-          <div className="pill">عدد النتائج: <strong>{list.length}</strong></div>
+          <div className="pill">
+            اللاعب المختار: <strong>#{selected.id}</strong>
+          </div>
+          <div className="pill">
+            <a href="#/motion-analysis" style={{ textDecoration: "none", fontWeight: 900 }}>
+              فتح تحليل الحركة 3D →
+            </a>
+          </div>
         </div>
       </div>
 
       <div className="playerGrid">
-        {list.map((p) => {
-          const tag = riskLabel(p.risk);
-          const initials = p.name.split(" ").slice(0, 2).map(s => s[0]).join("");
-          return (
-            <div className="card" key={p.id}>
-              <div className="player">
-                <div className="avatar">{initials}</div>
-                <div className="playerMeta">
-                  <strong>{p.name} <span style={{ color: "rgba(242,244,247,.6)" }}>#{p.id}</span></strong>
-                  <span>{p.role}</span>
-                </div>
-                <div className="spark" title="نبض لحظي (عرض)"></div>
-              </div>
-
-              <div className="grid cols-2" style={{ marginTop: 12 }}>
-                <div className="card" style={{ padding: 12 }}>
-                  <h3>نبض</h3>
-                  <div className="value">{p.hr} bpm</div>
-                </div>
-                <div className="card" style={{ padding: 12 }}>
-                  <h3>SpO2</h3>
-                  <div className="value">{p.spo2}%</div>
-                </div>
-                <div className="card" style={{ padding: 12 }}>
-                  <h3>حرارة</h3>
-                  <div className="value">{p.temp}°</div>
-                </div>
-                <div className="card" style={{ padding: 12 }}>
-                  <h3>إجهاد</h3>
-                  <div className="value">{p.fatigue}%</div>
-                </div>
-              </div>
-
-              <div style={{ marginTop: 12, display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10 }}>
-                <div className={`badge ${tag.tone}`}>{tag.label}</div>
-                <div style={{ color: "rgba(242,244,247,.75)", fontSize: 12 }}>
-                  خطر: <strong style={{ color: "var(--text)" }}>{p.risk}%</strong>
-                </div>
-              </div>
-
-              <div className="bar" style={{ marginTop: 10 }}>
-                <div style={{ width: `${Math.max(1, 100 - p.risk)}%` }} />
-              </div>
-            </div>
-          );
-        })}
+        {list.map((p) => (
+          <PlayerProCard
+            key={p.id}
+            p={p}
+            selected={p.id === selectedId}
+            onSelect={() => setSelectedId(p.id)}
+          />
+        ))}
       </div>
     </div>
   );
