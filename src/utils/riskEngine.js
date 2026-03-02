@@ -2,15 +2,14 @@ export function clamp(n, a, b) {
   return Math.max(a, Math.min(b, n));
 }
 
-export function calcRisk({ hr, temp, spo2, fatigue, asymmetry = 0, hrv = 60 }) {
+export function calcRisk({ hr, temp, spo2, fatigue }) {
+  // Demo Model (محسوب لإظهار نتائج قوية في الواجهة)
   const hrScore = clamp((hr - 60) * 0.9, 0, 40);
   const tempScore = clamp((temp - 36.6) * 25, 0, 25);
   const o2Score = clamp((98 - spo2) * 6, 0, 25);
-  const fatScore = clamp(fatigue * 0.55, 0, 32);
-  const asymScore = clamp(asymmetry * 0.9, 0, 20);
-  const hrvScore = clamp((70 - hrv) * 0.6, 0, 18);
+  const fatScore = clamp(fatigue * 0.5, 0, 30);
 
-  const raw = hrScore + tempScore + o2Score + fatScore + asymScore + hrvScore;
+  const raw = hrScore + tempScore + o2Score + fatScore;
   return clamp(Math.round(raw), 0, 99);
 }
 
