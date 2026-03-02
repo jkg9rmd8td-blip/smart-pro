@@ -1,45 +1,48 @@
 body {
   margin: 0;
-  font-family: Arial;
-  background: radial-gradient(circle at center, #0f172a, #020617);
+  font-family: 'Segoe UI', sans-serif;
+  background: #050a15;
   color: white;
   direction: rtl;
 }
 
-.landing {
-  text-align: center;
-  padding: 120px 20px;
-}
-
 .dashboard {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: 300px 1fr 320px;
   gap: 20px;
-  padding: 40px;
-}
-
-.card, .decision, .timeline, .page {
-  background: rgba(30,41,59,0.95);
   padding: 20px;
-  border-radius: 14px;
-  box-shadow: 0 0 30px rgba(0,255,255,0.15);
-  transition: 0.3s;
+  height: 100vh;
+  box-sizing: border-box;
 }
 
-.card:hover {
-  box-shadow: 0 0 40px rgba(0,255,255,0.4);
+.panel {
+  background: linear-gradient(145deg, #0b1220, #0f172a);
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 0 30px rgba(0,255,255,0.08);
+  overflow: auto;
 }
 
-button {
-  padding: 10px 20px;
-  background: #2563eb;
-  border: none;
+.center-panel {
+  background: radial-gradient(circle at center, #0f172a, #0b1220);
+  border-radius: 16px;
+  padding: 30px;
+  box-shadow: 0 0 50px rgba(0,255,255,0.12);
+}
+
+.metric {
+  margin-bottom: 15px;
+  padding: 10px;
+  background: rgba(255,255,255,0.05);
   border-radius: 8px;
-  color: white;
-  cursor: pointer;
-  margin: 5px 0;
 }
 
-.alert.red { background: #7f1d1d; padding: 15px; border-radius: 8px; }
-.alert.yellow { background: #78350f; padding: 15px; border-radius: 8px; }
-.alert.green { background: #14532d; padding: 15px; border-radius: 8px; }
+.hud-title {
+  font-size: 18px;
+  margin-bottom: 15px;
+  color: #38bdf8;
+}
+
+.glow {
+  box-shadow: 0 0 20px rgba(0,255,255,0.5);
+}
