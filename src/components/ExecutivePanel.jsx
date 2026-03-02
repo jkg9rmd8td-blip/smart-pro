@@ -1,10 +1,10 @@
-export default function ExecutivePanel() {
+export default function ExecutivePanel({ risk }) {
+  const cost = risk * 15000
   return (
-    <div className="bg-gray-900 rounded-3xl p-6 border border-primary/20 shadow-lg">
-      <h3 className="text-primary font-bold mb-4">الوضع التنفيذي</h3>
-      <p>التعرض المالي: 240,000 ريال</p>
-      <p>جاهزية الفريق: 82%</p>
-      <p>مستوى المخاطر العالي: لاعب واحد</p>
+    <div className="card">
+      <h3>📊 نظرة تنفيذية</h3>
+      <p>مستوى المخاطر: {risk}%</p>
+      <p>تأثير مالي محتمل: {cost.toLocaleString()} ريال</p>
     </div>
-  );
+  )
 }
