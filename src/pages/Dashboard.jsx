@@ -1,76 +1,76 @@
 import { useEffect, useState } from "react";
 
 export default function Dashboard() {
-  const [risk, setRisk] = useState(0);
+  const [teamRisk, setTeamRisk] = useState(42);
+  const [readiness, setReadiness] = useState(87);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setRisk(72);
-    }, 500);
-    return () => clearTimeout(timer);
+    const interval = setInterval(() => {
+      setTeamRisk((prev) => (prev >= 70 ? 35 : prev + 1));
+      setReadiness((prev) => (prev <= 75 ? 90 : prev - 1));
+    }, 2000);
+    return () => clearInterval(interval);
   }, []);
 
   return (
-    <div>
-      <div className="dashboard-header">
-        <h1>مركز القيادة الصحية التنبؤية</h1>
-        <p>غرفة عمليات رقمية لمراقبة الحالة البدنية واتخاذ القرار اللحظي</p>
-      </div>
+    <div className="dashboard">
 
-      <div className="cards">
-        <div className="card">
-          <h3>جاهزية الفريق</h3>
-          <div className="value">89%</div>
+      {/* ====== شريط الحالة العام ====== */}
+      <div className="team-status">
+        <div>
+          <h2>جاهزية الفريق</h2>
+          <div className="progress">
+            <div
+              className="progress-fill"
+              style={{ width: `${readiness}%` }}
+            ></div>
+          </div>
+          <span>{readiness}%</span>
         </div>
 
-        <div className="card">
-          <h3>متوسط النبض</h3>
-          <div className="value">78 bpm</div>
-        </div>
-
-        <div className="card">
-          <h3>متوسط الإجهاد</h3>
-          <div className="value">32%</div>
-        </div>
-
-        <div className="card">
-          <h3>درجة الحرارة</h3>
-          <div className="value">36.8°</div>
+        <div className="risk-indicator">
+          <h2>مؤشر الخطر العام</h2>
+          <div className="risk-circle">
+            {teamRisk}%
+          </div>
         </div>
       </div>
 
-      <div className="risk-container">
-        <h2>مؤشر خطر الإصابة اللحظي</h2>
-
-        <div className="risk-bar">
-          <div
-            className="risk-progress"
-            style={{ width: `${risk}%` }}
-          ></div>
+      {/* ====== Game Impact AI ====== */}
+      <div className="impact-card">
+        <h3>🧠 تأثير المباراة – Game Impact AI</h3>
+        <p>إذا استمر اللاعب رقم 7 لمدة 12 دقيقة إضافية:</p>
+        <ul>
+          <li>⚠️ خطر إصابة عضلية: 38%</li>
+          <li>📉 خسارة متوقعة: مباراتين</li>
+          <li>💰 تكلفة تقديرية: 420,000 ريال</li>
+          <li>📊 تأثير على احتمالية الفوز: -11%</li>
+        </ul>
+        <div className="ai-recommendation">
+          🔴 توصية: استبدال خلال 6 دقائق
         </div>
-
-        <h3 style={{ marginTop: "20px", fontSize: "22px" }}>
-          {risk}%
-        </h3>
-
-        <p style={{ marginTop: "10px", color: "#94a3b8" }}>
-          ⚠ توصية الذكاء الاصطناعي: تخفيض الحمل البدني للاعب رقم 7 خلال الدقائق القادمة
-        </p>
       </div>
 
-      <div className="alerts-section">
-        <h2>التنبيهات الحية</h2>
-
-        <div className="alert high">
-          🔴 ارتفاع مفاجئ في معدل ضربات القلب – اللاعب #7
+      {/* ====== بيانات حيوية مباشرة ====== */}
+      <div className="live-data">
+        <div className="card">
+          <h4>نبضات القلب</h4>
+          <span className="value">88 bpm</span>
         </div>
 
-        <div className="alert medium">
-          🟠 إجهاد متوسط – اللاعب #4
+        <div className="card">
+          <h4>نسبة الأكسجين</h4>
+          <span className="value">97%</span>
         </div>
 
-        <div className="alert low">
-          🟢 حالة مستقرة – اللاعب #10
+        <div className="card">
+          <h4>الإجهاد العضلي</h4>
+          <span className="value danger">63%</span>
+        </div>
+
+        <div className="card">
+          <h4>حرارة الملعب</h4>
+          <span className="value">33°C</span>
         </div>
       </div>
     </div>
